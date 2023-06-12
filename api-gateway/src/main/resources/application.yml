@@ -1,0 +1,51 @@
+eureka:
+    client:
+        fetch-registry: true
+        register-with-eureka: true
+        serviceUrl:
+            defaultZone: http://eureka-service:8761/eureka
+        initialInstanceInfoReplicationIntervalSeconds: 5
+        registryFetchIntervalSeconds: 5
+    instance:
+        leaseRenewalIntervalInSeconds: 5
+        leaseExpirationDurationInSeconds: 5
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+server:
+    port: 80
+spring:
+    application:
+        name: api-gateway
+    cloud:
+        discovery:
+            enabled: true
+        gateway:
+            discovery:
+                locator:
+                    enabled: true
+            routes:
+            # -   id: eureka-api
+            #     uri: http://${app.eureka-server}:8761
+            #     predicates:
+            #     -   Path=/eureka/api/{segment}
+            #     filters:
+            #     -   SetPath=/eureka/{segment}
+            # -   id: eureka-web-start
+            #     uri: http://eureka-server:8761
+            #     predicates:
+            #     -   Path=/eureka/web
+            #     filters:
+            #     -   SetPath=/
+            -   id: eureka-web-other
+                uri: http://eureka-service:8761
+                predicates:
+                - Path=/eureka/**
+                filters:
+                - SetPath=/
+            
+        service-registry:
+            auto-registration:
+                fail-fast: true

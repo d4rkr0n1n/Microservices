@@ -1,16 +1,67 @@
-version: '3'
+# version: '3'
 services:
+
+  eureka-service:
+    build: 
+      context: ./eureka-service
+      target: local
+    networks:
+      - microservices-network
+    ports:
+      - 8761:8761
+    image: eureka-service
+
+  api-gateway:
+    build: 
+      context: ./api-gateway
+      target: local
+    networks:
+      - microservices-network
+    ports:
+      - 80:80
+    depends_on:
+      - eureka-service
+    image: api-gateway
+
+  config-server:
+    build: 
+      context: ./config-server
+      target: native
+    networks:
+      - microservices-network
+    ports:
+      - 8888:8888
+    depends_on:
+      - eureka-service
+    image: config-server
+
+  ms1:
+    build: 
+      context: ./ms1
+      target: local
+    image: ms1
+    depends_on:
+      - eureka-service
+      - config-server
+      - zookeeper
+      - kafka
+      - rabbitmq
+    ports:
+      - 8080:8080
+    networks:
+      - microservices-network
+
   zookeeper:
-    container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - 22181:2181
+    networks:
+      - microservices-network
   
   kafka:
-    container_name: kafka
     image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
@@ -23,68 +74,16 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - microservices-network
 
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3.9-management
     ports:
       - 5672:5672
       - 15672:15672
-
-  api-gateway:
-    container_name: api-gateway
-    image: docker.io/d4rkr0n1n/api-gateway
-    depends_on:
-      - eureka-service
-    ports:
-      - 80:80
-    # links:
-    #   - "eureka-service"
-    # environment:
-    #   eureka.client.serviceUrl.defaultZone: http://discovery:8761/eureka
-    # environment:
-    #   server.port: 80
-    #   eureka.client.enabled: 'true'
-    #   eureka.host: eureka-service
-    #   eureka.instance.preferIpAddress: 'true'
     networks:
-      - network1
-
-  eureka-service:
-    container_name: eureka-service
-    image: docker.io/d4rkr0n1n/eureka-service
-    networks:
-      - network1
-    ports:
-      - 8761:8761
-
-  ms1:
-    container_name: ms1
-    image: docker.io/d4rkr0n1n/ms1
-    depends_on:
-      - eureka-service
-      - config-server
-    ports:
-      - 8080:8080
-
-  ms2:
-    container_name: ms2
-    image: docker.io/d4rkr0n1n/ms2
-    depends_on:
-      - eureka-service
-    ports:
-      - 8081:8081
-
-  config-server:
-    container_name: config-server
-    image: docker.io/d4rkr0n1n/config-server
-    depends_on:
-      - eureka-service
-    ports:
-      - 8888:8888
+      - microservices-network
 
 networks:
-  network1:
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "true"
+  microservices-network:
