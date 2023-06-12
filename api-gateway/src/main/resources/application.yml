@@ -27,24 +27,20 @@ spring:
                 locator:
                     enabled: true
             routes:
-            # -   id: eureka-api
-            #     uri: http://${app.eureka-server}:8761
-            #     predicates:
-            #     -   Path=/eureka/api/{segment}
-            #     filters:
-            #     -   SetPath=/eureka/{segment}
-            # -   id: eureka-web-start
-            #     uri: http://eureka-server:8761
-            #     predicates:
-            #     -   Path=/eureka/web
-            #     filters:
-            #     -   SetPath=/
             -   id: eureka-web-other
                 uri: http://eureka-service:8761
                 predicates:
                 - Path=/eureka/**
                 filters:
                 - SetPath=/
+            -   id: microservice-1
+                uri: http://ms1:8080
+                predicates:
+                - Path=/api/v1/**
+            -   id: microservice-2
+                uri: http://ms2:8081
+                predicates:
+                - Path=/api/v2/**
             
         service-registry:
             auto-registration:

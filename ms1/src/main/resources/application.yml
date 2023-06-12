@@ -14,7 +14,7 @@ management:
 server:
     port: 8080
     servlet:
-        context-path: /api
+        context-path: /api/v1
 spring:
     application:
         name: MICROSERVICE-1

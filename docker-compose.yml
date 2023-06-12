@@ -10,6 +10,7 @@ services:
     ports:
       - 8761:8761
     image: eureka-service
+    container_name: eureka-service
 
   api-gateway:
     build: 
@@ -22,6 +23,7 @@ services:
     depends_on:
       - eureka-service
     image: api-gateway
+    container_name: api-gateway
 
   config-server:
     build: 
@@ -34,6 +36,7 @@ services:
     depends_on:
       - eureka-service
     image: config-server
+    container_name: config-server
 
   ms1:
     build: 
@@ -41,7 +44,6 @@ services:
       target: local
     image: ms1
     depends_on:
-      - eureka-service
       - config-server
       - zookeeper
       - kafka
@@ -50,6 +52,25 @@ services:
       - 8080:8080
     networks:
       - microservices-network
+    container_name: ms1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ms2:
+    build: 
+      context: ./ms2
+      target: local
+    image: ms2
+    depends_on:
+      - ms1
+    ports:
+      - 8081:8081
+    networks:
+      - microservices-network
+    container_name: ms2
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -60,6 +81,7 @@ services:
       - 22181:2181
     networks:
       - microservices-network
+    container_name: zookeeper
   
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -76,6 +98,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - microservices-network
+    container_name: kafka
 
   rabbitmq:
     image: rabbitmq:3.9-management
@@ -84,6 +107,7 @@ services:
       - 15672:15672
     networks:
       - microservices-network
+    container_name: rabbitmq
 
 networks:
   microservices-network:

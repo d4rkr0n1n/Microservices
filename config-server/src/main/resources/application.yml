@@ -11,6 +11,6 @@ spring:
         config:
             server:
                 native:
-                    searchLocations: .
+                    searchLocations: classpath:/common-config
     profiles:
         active: native
