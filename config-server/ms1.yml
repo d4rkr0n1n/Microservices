@@ -1,0 +1,6 @@
+
+ms1.value: test-config-server
+
+spring:
+  profiles:
+    active: local

@@ -35,7 +35,7 @@ public class Controller {
     headers.add("header", "hvalue");
     HttpEntity<?> entity = new HttpEntity<>(headers);
 
-    String urlTemplate = UriComponentsBuilder.fromHttpUrl("http://localhost:8080/ms1/{variable}")
+    String urlTemplate = UriComponentsBuilder.fromHttpUrl("http://api-gateway/api/v1/ms1/{variable}")
         .queryParam("param", "pvalue")
         .encode()
         .toUriString();
@@ -53,7 +53,7 @@ public class Controller {
           String.class,
           params);
     } catch (HttpClientErrorException | HttpServerErrorException e) {
-      throw new HttpServerErrorException(HttpStatusCode.valueOf(0));
+      throw new HttpServerErrorException(HttpStatusCode.valueOf(500));
     }
 
     LOGGER.info("");

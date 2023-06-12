@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.1</version>
+		<version>3.1.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com</groupId>
@@ -83,38 +83,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<version>3.2.1</version>
-				<configuration>
-				   <from>
-					  <image>maven:3.8.7</image>
-					  <auth>
-						<username>d4rkr0n1n</username>
-						<password>JFMAMJJASOND</password>
-					  </auth>
-				   </from>
-				   <to>
-					  <image>docker.io/d4rkr0n1n/${project.name}</image>
-					  <auth>
-						<username>d4rkr0n1n</username>
-						<password>JFMAMJJASOND</password>
-					  </auth>
-				   </to>
-				   <container>
-						<ports>8080</ports>
-				   </container>
-				</configuration>
-				<executions>
-				   <execution>
-					  <phase>verify</phase>
-					  <goals>
-						 <goal>dockerBuild</goal>
-					  </goals>
-				   </execution>
-				</executions>
-			 </plugin>
 		</plugins>
 	</build>
 
@@ -124,7 +92,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>2022.0.0</version>
+				<version>2022.0.3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

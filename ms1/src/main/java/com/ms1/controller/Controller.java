@@ -25,6 +25,7 @@ public class Controller {
     
     private final TopicProducer topicProducer;
 
+    @Autowired
     Configuration configuration;
 
     @GetMapping("/ms1/{variable}")
