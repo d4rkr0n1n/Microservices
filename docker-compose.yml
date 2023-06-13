@@ -9,7 +9,7 @@ services:
       - microservices-network
     ports:
       - 8761:8761
-    image: eureka-service
+    image: demo.goharbor.io/d4rkr0n1n/eureka-service
     container_name: eureka-service
 
   api-gateway:
@@ -22,7 +22,7 @@ services:
       - 80:80
     depends_on:
       - eureka-service
-    image: api-gateway
+    image: demo.goharbor.io/d4rkr0n1n/api-gateway
     container_name: api-gateway
 
   config-server:
@@ -35,14 +35,14 @@ services:
       - 8888:8888
     depends_on:
       - eureka-service
-    image: config-server
+    image: demo.goharbor.io/d4rkr0n1n/config-server
     container_name: config-server
 
   ms1:
     build: 
       context: ./ms1
       target: local
-    image: ms1
+    image: demo.goharbor.io/d4rkr0n1n/ms1
     depends_on:
       - config-server
       - zookeeper
@@ -63,7 +63,7 @@ services:
     build: 
       context: ./ms2
       target: local
-    image: ms2
+    image: demo.goharbor.io/d4rkr0n1n/ms2
     depends_on:
       - ms1
     ports:
